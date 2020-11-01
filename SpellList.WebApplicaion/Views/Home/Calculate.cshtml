@@ -1,17 +1,32 @@
 ﻿@using System.Collections
+@using System.Globalization
+@using SpellList.Algorithm
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
 @{
-    ViewData["Title"] = "拼单结果";
+    ViewData["Title"] = "满减列表";
     var index = 1;
 }
 <h1>@ViewData["Title"]</h1>
+<table border="1">
+    <tr>
+        <td>序号</td>
+        <td>商品</td>
+        <td>总价</td>
+    </tr>
+    @foreach (Allocation data in (IEnumerable)ViewData["Calculate"])
+    {
 
-@foreach (var data in (IEnumerable)ViewData["Calculate"])
-{
-    <p>@index    @data.ToString()</p>
-    index++;
-}
+        <tr>
+            <td>@index</td>
+            <td>@data.ToString()</td>
+            <td>@data.Count.ToString(CultureInfo.InvariantCulture)</td>
+        </tr>
+
+        @*<p>@index    @data.ToString()</p>*@
+        index++;
+    }
+</table>

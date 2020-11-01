@@ -20,7 +20,7 @@ namespace SpellList.WebApplicaion
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>().UseUrls("http://*:8989");
                 });
     }
 }

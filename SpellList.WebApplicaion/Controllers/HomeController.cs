@@ -28,8 +28,9 @@ namespace SpellList.WebApplicaion.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpLoadFile(List<IFormFile> files, decimal amount, decimal minNum)
+        public IActionResult UpLoadFile([FromForm]List<IFormFile> files, [FromForm]decimal amount, [FromForm]decimal minNum)
         {
+            Console.WriteLine("进入");
             long size = files.Sum(f => f.Length);
 
             try
@@ -48,7 +49,7 @@ namespace SpellList.WebApplicaion.Controllers
                                 if (result != null)
                                 {
                                     ViewData["Calculate"] = result;
-                                    return View("Calculate", result);
+                                    return View("Calculate");
                                 }
                             }
                         }
@@ -62,6 +63,12 @@ namespace SpellList.WebApplicaion.Controllers
             }
 
             return Ok(new { count = files.Count, size });
+        }
+
+        [HttpPost]
+        public IActionResult UpLoadFile2(decimal amount, decimal minNum)
+        {
+            return Ok(new { count = amount, minNum });
         }
 
 
