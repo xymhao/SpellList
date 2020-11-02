@@ -1,27 +1,42 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<style>
+    .formdiv {
+        width: 100%;
+        height: 40px;
+        display: block;
+    }
 
+    .left {
+        float: left;
+    }
+
+    .right {
+        float: left;
+        margin-left: 10px;
+    }
+</style>
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">拼单满减</h1>
     <form method="post" target="_blank" enctype="multipart/form-data" asp-controller="Home" asp-action="UpLoadFile">
-        <div class="form-group">
-            <div class="col-md-10">
-            <p>文件上传:</p>
-            <input type="file" name="files">
-        </div>
-
-            <div class="col-md-10">
-                <p>拼单数额:</p>
-                <input type="text" name="amount" value="300" \>
+        <div class="form-group" style="width: 500px;height:155px;margin: auto; margin-top: 30px">
+            <div class="col-md-10 formdiv">
+                <p class="left">文件上传:</p>
+                <input class="right" type="file" name="files">
             </div>
 
-            <div class="col-md-10">
-                <p>误差范围:</p>
-                <input type="text" name="minNum" value="10" \>
+            <div class="col-md-10 formdiv">
+                <p class="left">拼单数额:</p>
+                <input class="right" type="text" name="amount" value="300" \>
+            </div>
+
+            <div class="col-md-10 formdiv">
+                <p class="left">误差范围:</p>
+                <input class="right" type="text" name="minNum" value="10" \>
             </div>
         </div>
-        
+
 
         <div class="form-group">
             <div class="col-md-10">
