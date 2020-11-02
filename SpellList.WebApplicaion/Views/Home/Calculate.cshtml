@@ -22,17 +22,19 @@
         <td>序号</td>
         <td>商品</td>
         <td>总价</td>
+        <td>无法拼单商品</td>
     </tr>
     @foreach (Allocation data in (IEnumerable)ViewData["Calculate"])
     {
 
-        <tr>
-            <td>@index</td>
-            <td>@data.ToString()</td>
-            <td>@data.Count.ToString(CultureInfo.InvariantCulture)</td>
-        </tr>
+<tr>
+    <td>@index</td>
+    <td style="color: #0ba72f;">@data.Combination</td>
+    <td>@data.Count.ToString(CultureInfo.InvariantCulture)</td>
+    <td style="color: #d05353;">@data.ExceptCombination</td>
+</tr>
 
-        @*<p>@index    @data.ToString()</p>*@
+    @*<p>@index    @data.ToString()</p>*@
         index++;
     }
 </table>
