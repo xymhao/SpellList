@@ -22,6 +22,7 @@ namespace SpellList.Algorithm
                 allocation.ExceptProducts = products.Except(allocation.Products).ToList();
             }
 
+            calculates.Sort((allocation, allocation1) => (allocation.Count % 300).CompareTo(allocation1.Count % 300));
             return calculates;
         }
 
