@@ -7,6 +7,24 @@ namespace SpellList.Algorithm
 {
     public class DynamicCalculate
     {
+        public static List<Allocation> GetOptimalCombination(decimal amount, decimal miniNum, List<Product> products)
+        {
+            var calculates = DynamicCalculate.Calculate(amount, miniNum, products);
+            foreach (Allocation allocation in calculates
+                                                .Where(allocation => allocation.Products.Count == products.Count))
+            {
+                return new List<Allocation>() { allocation };
+            }
+
+            //处理所有拼单 缺失项
+            foreach (Allocation allocation in calculates)
+            {
+                allocation.ExceptProducts = products.Except(allocation.Products).ToList();
+            }
+
+            return calculates;
+        }
+
         public static List<Allocation> Calculate(decimal amount, decimal miniNum, List<Product> products)
         {
             var allocations = Allocation(amount, miniNum, products);

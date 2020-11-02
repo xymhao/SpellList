@@ -31,27 +31,23 @@ namespace SpellList.WebApplicaion.Controllers
         public IActionResult UpLoadFile([FromForm]List<IFormFile> files, [FromForm]decimal amount, [FromForm]decimal minNum)
         {
             Console.WriteLine("进入");
-            long size = files.Sum(f => f.Length);
 
             try
             {
                 foreach (var formFile in files)
                 {
-                    if (formFile.Length > 0)
+                    if (formFile.Length <= 0) continue;
+
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    var excelPackage = new ExcelPackage(formFile.OpenReadStream());
+                    var workbook = excelPackage.Workbook;
+                    foreach (var excelWorksheet in workbook.Worksheets)
                     {
+                        var result = GetProductAllocation(excelWorksheet, amount, minNum);
+                        if (result != null)
                         {
-                            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                            var excelPackage = new ExcelPackage(formFile.OpenReadStream());
-                            var workbook = excelPackage.Workbook;
-                            foreach (var excelWorksheet in workbook.Worksheets)
-                            {
-                                var result = HandleExcel(excelWorksheet,amount, minNum);
-                                if (result != null)
-                                {
-                                    ViewData["Calculate"] = result;
-                                    return View("Calculate");
-                                }
-                            }
+                            ViewData["Calculate"] = result;
+                            return View("Calculate");
                         }
                     }
                 }
@@ -62,7 +58,7 @@ namespace SpellList.WebApplicaion.Controllers
                 throw;
             }
 
-            return Ok(new { count = files.Count, size });
+            return Ok(new { count = files.Count });
         }
 
         [HttpPost]
@@ -72,13 +68,20 @@ namespace SpellList.WebApplicaion.Controllers
         }
 
 
-        private static List<Allocation> HandleExcel(ExcelWorksheet excelWorksheet, in decimal amount, in decimal minNum)
+        private static List<Allocation> GetProductAllocation(ExcelWorksheet excelWorksheet, in decimal amount, in decimal minNum)
         {
             if (excelWorksheet.Name != "满减")
             {
                 return null;
             }
 
+            List<Product> list = TransferProduct(excelWorksheet);
+
+            return DynamicCalculate.GetOptimalCombination(amount, minNum, list);
+        }
+
+        private static List<Product> TransferProduct(ExcelWorksheet excelWorksheet)
+        {
             var start = excelWorksheet.Dimension.Start;
             var end = excelWorksheet.Dimension.End;
             List<Product> list = new List<Product>();
@@ -90,8 +93,7 @@ namespace SpellList.WebApplicaion.Controllers
                 list.Add(product);
             }
 
-            return DynamicCalculate.Calculate(amount, minNum, list);
-
+            return list;
         }
 
         public IActionResult Calculate(List<Allocation> list)

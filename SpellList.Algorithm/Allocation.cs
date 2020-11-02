@@ -20,11 +20,13 @@ namespace SpellList.Algorithm
 
         public decimal Count => Products.Sum(x => x.Price);
 
-        public string Combination => string.Join(",", Products.Select(x => x.Name));
+        public string Combination => string.Join(",", Products.Select(x => $"{x.Name}({x.Price})"));
+
+        public string ExceptCombination => string.Join(",", ExceptProducts.Select(x => $"{x.Name}({x.Price})"));
 
         public override string ToString()
         {
-            return $"{Combination,-25} 总价:{Count,-10}";
+            return $"{Combination,-50} 总价:{Count,-10}  排除商品：{ExceptCombination}";
         }
 
         public bool AddProduct(Product product, in decimal amount, in decimal miniNum)
