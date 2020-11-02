@@ -11,6 +11,8 @@ namespace SpellList.Algorithm
             Products = products;
         }
 
+        public List<Allocation> ExceptAllocations { get; set; }
+
         /// <summary>
         /// 当前方案集合
         /// </summary>

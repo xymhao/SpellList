@@ -16,14 +16,21 @@ namespace SpellList.Algorithm
                 return new List<Allocation>() { allocation };
             }
 
+            Recursive(amount, miniNum, products, calculates);
+
+            calculates.Sort((allocation, allocation1) => (allocation.Count % 300).CompareTo(allocation1.Count % 300));
+            return calculates;
+        }
+
+        private static void Recursive(decimal amount, decimal miniNum, List<Product> products, List<Allocation> calculates)
+        {
             //处理所有拼单 缺失项
             foreach (Allocation allocation in calculates)
             {
                 allocation.ExceptProducts = products.Except(allocation.Products).ToList();
+                allocation.ExceptAllocations = Calculate(amount, miniNum, allocation.ExceptProducts); 
+                Recursive(amount, miniNum, allocation.ExceptProducts, allocation.ExceptAllocations);
             }
-
-            calculates.Sort((allocation, allocation1) => (allocation.Count % 300).CompareTo(allocation1.Count % 300));
-            return calculates;
         }
 
         public static List<Allocation> Calculate(decimal amount, decimal miniNum, List<Product> products)

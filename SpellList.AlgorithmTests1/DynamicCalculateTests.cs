@@ -35,10 +35,10 @@ namespace SpellList.Algorithm.Tests
                 new Product("盆子", 32.9m),
                 new Product("架子", 62.1m),
                 new Product("靴子", 1214),
-                new Product("智能锁", 1214),
+                new Product("智能锁", 4019),
                 new Product("擦脸", 216)
             };
-            var result = DynamicCalculate.GetOptimalCombination(300, 10, product);
+            var result = DynamicCalculate.GetOptimalCombination(300, 20, product);
             Assert.AreEqual(1, result.Count);
         }
 
