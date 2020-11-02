@@ -1,5 +1,6 @@
 ﻿@using System.Collections
 @using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Diagnostics
 @using SpellList.Algorithm
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -31,18 +32,32 @@
         <td>@index</td>
         <td style="color: #0ba72f;">@data.Combination</td>
         <td>@data.Count.ToString(CultureInfo.InvariantCulture)</td>
-        @if (data.ExceptAllocations.Count > 0)
+        @if (data.ExceptAllocations?.Count > 0)
         {
-        <td style="color: #0ba72f;">
-            @foreach (Allocation childAllocation in data.ExceptAllocations)
+            Allocation childAllocation = data.ExceptAllocations.FirstOrDefault();
+            while (childAllocation != null)
             {
-            <p>@childAllocation.Combination 总价：@childAllocation.Count；  <span style="color: #d05353;">缺失：@childAllocation.ExceptCombination</span></p>
-            }
-        </td>
+                <td style="color: #0ba72f;">
+                    @*@foreach (Allocation childAllocation in data.ExceptAllocations)
+                    {
+                        <p>@childAllocation.Combination 总价：@childAllocation.Count； <span style="color: #d05353;">缺失：@childAllocation.ExceptCombination</span></p>
+                    }*@
+                    <p>@childAllocation.Combination 总价：@childAllocation.Count；</p>
+
+                </td>
+                Allocation beforeAllocation = childAllocation;
+                childAllocation = childAllocation.ExceptAllocations.FirstOrDefault();
+                if (childAllocation == null && !string.IsNullOrEmpty(beforeAllocation.ExceptCombination))
+                {
+                    <td style="color: #d05353;">
+                        缺失：@beforeAllocation.ExceptCombination
+                    </td>
+                }
+        }
         }
         else
         {
-        <td style="color: #d05353;">@data.ExceptCombination</td>
+                    <td style="color: #d05353;">缺失：@data.ExceptCombination</td>
         }
     </tr>
 
