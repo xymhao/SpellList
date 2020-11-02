@@ -22,6 +22,7 @@ namespace SpellList.Algorithm.Tests
                 new Product("d", 100),
             };
             var result = DynamicCalculate.GetOptimalCombination(300, 10, product);
+            var result2 = DynamicCalculate.GetOptimalCombination2(300, 10, product);
             Assert.AreEqual(1, result.Count);
         }
 
@@ -39,22 +40,8 @@ namespace SpellList.Algorithm.Tests
                 new Product("擦脸", 216)
             };
             var result = DynamicCalculate.GetOptimalCombination(300, 20, product);
-            Assert.AreEqual(1, result.Count);
-        }
-
-
-        [TestMethod()]
-        public void GetAllCombinationTest()
-        {
-            var product = new List<Product>()
-            {
-                new Product("a", 500),
-                new Product("b", 195),
-                new Product("c", 105),
-                new Product("d", 100),
-            };
-            var result = DynamicCalculate.FullCombination(product);
-
+            var result2 = DynamicCalculate.GetOptimalCombination2(300, 20, product);
+            Assert.AreEqual(3, result.Count);
         }
     }
 }

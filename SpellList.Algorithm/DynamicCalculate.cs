@@ -7,6 +7,45 @@ namespace SpellList.Algorithm
 {
     public class DynamicCalculate
     {
+        public static List<Allocation> GetOptimalCombination2(decimal amount, decimal miniNum, List<Product> products)
+        {
+            List<Allocation> allocations = new List<Allocation>();
+            Allocation allocation = new Allocation();
+            GetAllocation(amount, miniNum, products, allocation, allocations);
+            return allocations;
+        }
+
+        private static void GetAllocation(in decimal amount, in decimal miniNum, List<Product> products, Allocation allocation, List<Allocation> allocations)
+        {
+            if (allocation.Validate(amount, miniNum))
+            {
+                if (!allocations.Contains(allocation))
+                {
+                    allocations.Add(allocation);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            foreach (var product in products)
+            {
+                if (!allocation.Products.Contains(product))
+                {
+                    allocation.Products.Add(product);
+                }
+                else
+                {
+                    continue;
+                }
+                GetAllocation(amount, miniNum, products.ToList(), allocation, allocations);
+
+                var except = new Allocation();
+                GetAllocation(amount, miniNum, products.Where(x => x.Id != product.Id).ToList(), except, allocations);
+            }
+        }
+
         public static List<Allocation> GetOptimalCombination(decimal amount, decimal miniNum, List<Product> products)
         {
             var calculates = DynamicCalculate.Calculate(amount, miniNum, products);
@@ -28,7 +67,7 @@ namespace SpellList.Algorithm
             foreach (Allocation allocation in calculates)
             {
                 allocation.ExceptProducts = products.Except(allocation.Products).ToList();
-                allocation.ExceptAllocations = Calculate(amount, miniNum, allocation.ExceptProducts); 
+                allocation.ExceptAllocations = Calculate(amount, miniNum, allocation.ExceptProducts);
                 Recursive(amount, miniNum, allocation.ExceptProducts, allocation.ExceptAllocations);
             }
         }

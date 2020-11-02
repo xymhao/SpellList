@@ -6,6 +6,10 @@ namespace SpellList.Algorithm
 {
     public class Allocation
     {
+        public Allocation()
+        {
+            
+        }
         public Allocation(List<Product> products)
         {
             Products = products;
@@ -67,6 +71,33 @@ namespace SpellList.Algorithm
         public bool Validate(in decimal amount, in decimal miniNum)
         {
             return Count % amount < miniNum && Count > amount;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            Allocation allocation = obj as Allocation;
+            if (allocation == null)
+            {
+                return false;
+            }
+            if (allocation.Products.Count != Products.Count)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < allocation.Products.Count; i++)
+            {
+                if (allocation.Products[i] != Products[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return string.Join(",",Products.Select(x=>x.Id)).GetHashCode();
         }
     }
 }
