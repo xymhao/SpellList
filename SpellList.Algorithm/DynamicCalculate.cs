@@ -11,7 +11,8 @@ namespace SpellList.Algorithm
         {
             List<Allocation> allocations = new List<Allocation>();
             Allocation allocation = new Allocation();
-            GetAllocation(amount, miniNum, products, allocation, allocations);
+            //GetAllocation(amount, miniNum, products, allocation, allocations);
+            GetAllocation2(amount, miniNum, 0, products, allocation, allocations);
             return allocations;
         }
 
@@ -44,6 +45,40 @@ namespace SpellList.Algorithm
                 var except = new Allocation();
                 GetAllocation(amount, miniNum, products.Where(x => x.Id != product.Id).ToList(), except, allocations);
             }
+        }
+
+        private static void GetAllocation2(in decimal amount, in decimal miniNum,int num, List<Product> products, Allocation allocation, List<Allocation> allocations)
+        {
+            if (allocation.Validate(amount, miniNum))
+            {
+                if (!allocations.Contains(allocation))
+                {
+                    var item = new Allocation();
+                    item.Products.AddRange(allocation.Products);
+                    allocations.Add(item);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            if (num == products.Count)
+            {
+                return;
+            }
+
+            var product = products[num];
+            if (!allocation.Products.Contains(product))
+            {
+                allocation.Products.Add(product);
+            }
+            //包含product
+            GetAllocation2(amount, miniNum, num + 1, products.ToList(), allocation, allocations);
+            
+            //不包含product
+            allocation.Products.Remove(product);
+            GetAllocation2(amount, miniNum, num + 1, products.ToList(), allocation, allocations);
         }
 
         public static List<Allocation> GetOptimalCombination(decimal amount, decimal miniNum, List<Product> products)
