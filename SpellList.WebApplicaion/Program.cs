@@ -20,7 +20,7 @@ namespace SpellList.WebApplicaion
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>().UseUrls("http://*:8989");
+                    webBuilder.UseStartup<Startup>().UseUrls("http://*:8989","http://www.sunmoon.cool:80");
                 });
     }
 }
