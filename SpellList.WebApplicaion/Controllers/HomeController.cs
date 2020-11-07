@@ -28,7 +28,7 @@ namespace SpellList.WebApplicaion.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpLoadFile([FromForm]List<IFormFile> files, [FromForm]decimal amount, [FromForm]decimal minNum)
+        public IActionResult UpLoadFile([FromForm] List<IFormFile> files, [FromForm] decimal amount, [FromForm] decimal minNum)
         {
             Console.WriteLine("进入");
 
@@ -59,6 +59,14 @@ namespace SpellList.WebApplicaion.Controllers
             }
 
             return Ok(new { count = files.Count });
+        }
+
+        public FileResult DownTemplate()
+        {
+            string root = AppContext.BaseDirectory;
+            var path = Path.Combine(root, "满减模板.xlsx");
+            var file = System.IO.File.ReadAllBytes(path);
+            return File(file, "application/x-xls");
         }
 
         [HttpPost]

@@ -20,7 +20,10 @@
 <div class="text-center">
     <h1 class="display-4">拼单满减</h1>
     <form method="post" target="_blank" enctype="multipart/form-data" asp-controller="Home" asp-action="UpLoadFile">
-        <div class="form-group" style="width: 500px;height:155px;margin: auto; margin-top: 30px">
+        <div class="form-group" style="width: 500px; height: 155px; margin: auto; margin-top: 30px">
+            <div class="col-md-10 formdiv">
+                <a asp-controller="Home" asp-action="DownTemplate" download="满减模板.xlsx">模板下载</a>
+            </div>
             <div class="col-md-10 formdiv">
                 <p class="left">文件上传:</p>
                 <input class="right" type="file" name="files">
