@@ -54,13 +54,13 @@ namespace SpellList.WebApplicaion.Controllers
             }
             catch (ExcelTransferException e)
             {
-                return View("Error", new ErrorViewModel(){Message = e.Message});
+                return View("Error", new ErrorViewModel() { Message = e.Message });
 
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return View("Error", new ErrorViewModel(){Message = "服务器内部错误"});
+                return View("Error", new ErrorViewModel() { Message = "服务器内部错误" });
             }
 
             return Ok(new { count = files.Count });
@@ -89,8 +89,8 @@ namespace SpellList.WebApplicaion.Controllers
             }
 
             List<Product> list = TransferProduct(excelWorksheet);
-
-            return DynamicCalculate.GetOptimalCombination(amount, minNum, list);
+            var allocation = new SpellAllocation(list, amount, minNum);
+            return allocation.GetOptimalCombination();
         }
 
         private static List<Product> TransferProduct(ExcelWorksheet excelWorksheet)
@@ -137,7 +137,7 @@ namespace SpellList.WebApplicaion.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel(){Message = "系统异常"});
+            return View(new ErrorViewModel() { Message = "系统异常" });
         }
     }
 
