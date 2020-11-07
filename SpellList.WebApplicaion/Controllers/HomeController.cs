@@ -52,10 +52,15 @@ namespace SpellList.WebApplicaion.Controllers
                     }
                 }
             }
+            catch (ExcelTransferException e)
+            {
+                return View("Error", new ErrorViewModel(){Message = e.Message});
+
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                return View("Error", new ErrorViewModel(){Message = "服务器内部错误"});
             }
 
             return Ok(new { count = files.Count });
@@ -80,7 +85,7 @@ namespace SpellList.WebApplicaion.Controllers
         {
             if (excelWorksheet.Name != "满减")
             {
-                return null;
+                throw new ExcelTransferException($"模板不符合要求，请下载最新的模板。");
             }
 
             List<Product> list = TransferProduct(excelWorksheet);
@@ -97,7 +102,22 @@ namespace SpellList.WebApplicaion.Controllers
             {
                 string name = excelWorksheet.Cells[row, 1].Text; // This got me the actual value I needed.
                 string price = excelWorksheet.Cells[row, 2].Text; // This got me the actual value I needed.
-                var product = new Product(name, Convert.ToDecimal(price));
+                if (name.Equals("商品名称") || price.Equals("金额"))
+                {
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(price))
+                {
+                    continue;
+                }
+
+                if (!decimal.TryParse(price, out decimal priceValue))
+                {
+                    throw new ExcelTransferException($"商品名称:{name},金额：{price}，价格类型转换失败。");
+                }
+
+                var product = new Product(name, priceValue);
                 list.Add(product);
             }
 
@@ -117,7 +137,14 @@ namespace SpellList.WebApplicaion.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel(){Message = "系统异常"});
+        }
+    }
+
+    internal class ExcelTransferException : Exception
+    {
+        public ExcelTransferException(string message) : base(message)
+        {
         }
     }
 }

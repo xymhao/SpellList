@@ -22,8 +22,29 @@ namespace SpellList.Algorithm.Tests
                 new Product("d", 100),
             };
             var result = DynamicCalculate.GetOptimalCombination(300, 10, product);
-            var result2 = DynamicCalculate.GetOptimalCombination2(300, 10, product);
             Assert.AreEqual(1, result.Count);
+
+            var spell = new SpellAllocation(product, 300, 10);
+            var result2 = spell.GetOptimalCombination();
+            
+            CheckAlgorithm(result2, result);
+        }
+
+        private static void CheckAlgorithm(List<Allocation> result2, List<Allocation> result)
+        {
+            Assert.AreEqual(result2.Count, result.Count);
+            for (int i = 0; i < result.Count; i++)
+            {
+                for (int j = 0; j < result[i].Products.Count; j++)
+                {
+                    Assert.AreEqual(result[i].Products[j], result2[i].Products[j]);
+                }
+
+                for (int j = 0; j < result[i].ExceptAllocations.Count; j++)
+                {
+                    Assert.AreEqual(result[i].ExceptAllocations[j], result2[i].ExceptAllocations[j]);
+                }
+            }
         }
 
         [TestMethod()]
@@ -40,8 +61,12 @@ namespace SpellList.Algorithm.Tests
                 new Product("擦脸", 216)
             };
             var result = DynamicCalculate.GetOptimalCombination(300, 20, product);
-            var result2 = DynamicCalculate.GetOptimalCombination2(300, 20, product);
             Assert.AreEqual(3, result.Count);
+
+            var spell = new SpellAllocation(product, 300, 20);
+            var result2 = spell.GetOptimalCombination();
+
+            CheckAlgorithm(result2, result);
         }
     }
 }
